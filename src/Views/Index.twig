@@ -7,10 +7,10 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-8">
+        <div class="col-sm-8">
             {% for workspace in data %}
                 <div class="row justify-content-md-center">
-                    <div id="container{{ workspace.id }}" class="col-md-8" style="margin-bottom: 20px;display: none;">
+                    <div id="container{{ workspace.id }}" class="col-sm-8" style="margin-bottom: 20px;display: none;">
                         <div class="card">
                             <div class="card-body" id="{{ workspace.id }}">
                                 <div id="{{ workspace.id }}"></div>
@@ -20,9 +20,9 @@
                 </div>
             {% endfor %}
         </div>
-        <div class="col-4">
+        <div class="col-sm-4">
             <div class="row">
-                <div id="OrganisedContainer" class="col-md-12" style="margin-bottom: 20px;display: none;">
+                <div id="OrganisedContainer" class="col-sm-12" style="margin-bottom: 20px;display: none;">
                     <div class="card">
                         <div class="card-body">
                             <div class="card-title">
@@ -151,7 +151,7 @@
 
             if (fullDetails===true) {
                 image = '<img src="{{ links.home }}/public/img/checkmark.png" style="margin-right: 10px;"/>';
-                additional = '<div class="col col-md-4 text-right" style="color: #'  + (task.meta.isLate === true ? 'ce3056' : '58a182') + ';">' +
+                additional = '<div class="col col-sm-4 text-right" style="color: #'  + (task.meta.isLate === true ? 'ce3056' : '58a182') + ';">' +
                         (task.attributes.dueOn !== undefined ? task.attributes.dueOn : '' ) +
                         (task.attributes.dueAt !== undefined ? ' @' + task.attributes.dueAt : '' ) +
                     '</div>';

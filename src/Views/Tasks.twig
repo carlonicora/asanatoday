@@ -4,10 +4,10 @@
     </div>
 {% for task in data %}
 <div class="row justify-content-md-center">
-    <div class="col col-md-8">
+    <div class="col col-sm-8">
         <a href="{{ task.links.asana }}" target="_blank"><img src="{{ links.home }}/public/img/checkmark.png" style="margin-right: 10px;"/>{{ task.attributes.name }}</a>
     </div>
-    <div class="col col-md-4 text-right"{% if task.meta.isLate == true %} style="color: #ce3056;"{% elseif task.meta.isNear %} style="color: #58a182;"{% endif %}>
+    <div class="col col-sm-4 text-right"{% if task.meta.isLate == true %} style="color: #ce3056;"{% elseif task.meta.isNear %} style="color: #58a182;"{% endif %}>
 {% if task.attributes.dueOn %}{{ task.attributes.dueOn }}{% endif %}{% if task.attributes.dueAt %} @{{ task.attributes.dueAt }}{% endif %}
     </div>
 </div>
