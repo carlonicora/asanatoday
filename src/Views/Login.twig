@@ -1,0 +1,23 @@
+{% extends "/Templates/Unlogged.twig" %}
+
+{% block content %}
+    <div class="row align-items-center">
+        <div class="col-12 text-center">
+            <h1 class="text-center">Asana Today</h1>
+        </div>
+    </div>
+    <div class="row justify-content-md-center">
+        <div class="col-md-8">
+            <div class="card border-0">
+                <div class="card-body text-center">
+                    <a href="{{ data.links.login }}" class="btn btn-primary btn-login" style="padding: 15px 15px;width: auto;color: #ffffff;">
+                        <img src="{{ links.home }}public/img/asana-symbol.png" style="height: 20px;padding: 0px 10px;">Log In with Asana
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

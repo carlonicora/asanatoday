@@ -1,0 +1,205 @@
+{% extends "/Templates/Logged.twig" %}
+
+{% block content %}
+    <div class="row align-items-center">
+        <div class="col-12 text-center">
+            <h1 class="text-center">Asana Today</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-8">
+            {% for workspace in data %}
+                <div class="row justify-content-md-center">
+                    <div id="container{{ workspace.id }}" class="col-md-8" style="margin-bottom: 20px;display: none;">
+                        <div class="card">
+                            <div class="card-body" id="{{ workspace.id }}">
+                                <div id="{{ workspace.id }}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="col-4">
+            <div class="row">
+                <div id="OrganisedContainer" class="col-md-12" style="margin-bottom: 20px;display: none;">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-title">
+                                <h5 style="color: rgb(109, 110, 111);">Priorities</h5>
+                            </div>
+                        </div>
+                        <div>
+                            <ul id="Organised" style="list-style: none;padding-left: 10px;"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+<script>
+    $(document).ready(function(){
+        $("ul#Organised").sortable({
+            opacity: 0.6,
+            cursor: 'move',
+            update: function(event, ui){
+                var organisedTaskList = [];
+                $("ul#Organised li").each(function() {
+                    organisedTaskList.push('' + $(this).data('id'));
+                });
+
+                $.cookie('organisedTaskList', escape(organisedTaskList.join(',')));
+            }
+        });
+    });
+
+    ready(function(){
+        const date = new Date();
+        const offset = date.getTimezoneOffset();
+
+        var workspacesCount = {{ data|length }};
+        var workspacesProcessed = 0;
+        var taskList = [];
+        var organisedTaskList = [];
+
+        cookie=unescape($.cookie('organisedTaskList'))
+        if (cookie !== undefined && cookie !== '' && cookie !== 'undefined'){
+            organisedTaskList=cookie.split(',')
+        }
+
+        function fetchComplete(){
+            if (workspacesProcessed === workspacesCount){
+
+                newOrganisedTaskList = [];
+
+                if (organisedTaskList !== []) {
+                    for (var organisedTaskListCount = 0, taskId; taskId = organisedTaskList[organisedTaskListCount]; organisedTaskListCount++) {
+                        selectedTask = undefined;
+                        for (var taskListCount = 0, task; task = taskList[taskListCount]; taskListCount++) {
+                            if (task.id === taskId) {
+                                selectedTask = task;
+                                break;
+                            }
+                        }
+
+                        if (selectedTask !== undefined) {
+                            newOrganisedTaskList.push(selectedTask);
+                        }
+                    }
+                }
+
+                for (var taskListCount = 0, task; task=taskList[taskListCount]; taskListCount++) {
+                    selectedTask = undefined;
+                    if (organisedTaskList !== []) {
+                        for (var organisedTaskListCount = 0, taskId; taskId = organisedTaskList[organisedTaskListCount]; organisedTaskListCount++) {
+                            if (taskId === task.id) {
+                                selectedTask = task;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (selectedTask === undefined) {
+                        newOrganisedTaskList.push(task);
+                    }
+                }
+
+                document.getElementById('OrganisedContainer').style.display = 'block';
+
+                organisedTaskList = [];
+                for (var taskListCount = 0, task; task=newOrganisedTaskList[taskListCount]; taskListCount++) {
+                    addTask(task, 'Organised', false);
+                    organisedTaskList.push('' + task.id);
+                }
+
+                $.cookie('organisedTaskList', escape(organisedTaskList.join(',')));
+            }
+        }
+
+        function addWorkspace(data, workspaceContainer){
+            workspacesProcessed++;
+
+            if (data.data !== undefined) {
+                document.getElementById(workspaceContainer).style.display = 'block';
+                document.getElementById(workspaceContainer).innerHTML =
+                    '<div class="card-title">' +
+                        '<h5>' +
+                            '<a href="' + data.data[0].attributes.workspaceLink + '" target="_blank">' +
+                                data.data[0].attributes.workspaceName +
+                            '</a>' +
+                        '</h5>' +
+                    '</div>';
+
+                for (var i = 0, task; task = data.data[i]; i++) {
+                    taskList.push(task);
+                    addTask(task, workspaceContainer);
+                }
+            }
+
+            fetchComplete();
+        }
+
+        function addTask(task, container, fullDetails=true){
+            var image = '';
+            var additional = '';
+
+            if (fullDetails===true) {
+                image = '<img src="{{ links.home }}/public/img/checkmark.png" style="margin-right: 10px;"/>';
+                additional = '<div class="col col-md-4 text-right" style="color: #'  + (task.meta.isLate === true ? 'ce3056' : '58a182') + ';">' +
+                        (task.attributes.dueOn !== undefined ? task.attributes.dueOn : '' ) +
+                        (task.attributes.dueAt !== undefined ? ' @' + task.attributes.dueAt : '' ) +
+                    '</div>';
+                document.getElementById(container).innerHTML +=
+                    '<div class="row">' +
+                    '<div class="col">' +
+                    '<a href="' + task.links.asana + '" target="_blank">' +
+                    image +
+                    task.attributes.name +
+                    '</a>' +
+                    '</div>' +
+                    additional +
+                    '</div>';
+            } else {
+                image = '<img src="{{ links.home }}/public/img/move.png" style="margin-right: 10px;"/>';
+                colSize = 12;
+                if (task.attributes.dueAt !== undefined){
+                    additional = '<div class="col col-sm-4 text-right" style="color: #'  + (task.meta.isLate === true ? 'ce3056' : '58a182') + ';">' +
+                        (task.attributes.dueAt !== undefined ? '@' + task.attributes.dueAt : '' ) +
+                        '</div>';
+                    colSize = 8;
+                }
+
+                document.getElementById(container).innerHTML +=
+                    '<li data-id="' + task.id + '">' +
+                    '<div class="row" style="padding-right: 10px;">' +
+                    '<div class="col" style="col col-sm-' + colSize + '">' +
+                    '<a href="' + task.links.asana + '" target="_blank">' +
+                    image +
+                    task.attributes.name +
+                    '</a>' +
+                    '</div>' +
+                    additional +
+                    '</div>' +
+                    '</li>';
+            }
+        }
+
+{% for workspace in data %}
+        httpGet('{{ links.home }}TodayInWorkspace/{{ workspace.id }}?timezoneOffset=' + offset, function(response){
+            if(response !== undefined && response !== '') {
+                data = JSON.parse(response);
+                addWorkspace(data, 'container{{ workspace.id }}');
+            }
+        }, function(status){
+            console.log(status);
+        });
+{% endfor %}
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,120 @@
+body {
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    color: rgb(30, 31, 33);
+}
+
+.maincontainer {
+    min-height: 100%;
+    min-height: 100vh;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -moz-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    width: 100%;
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content : center;
+}
+
+h1 {
+    font-size: 40px;
+    font-weight: 500;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: rgb(30, 31, 33);
+}
+
+a {
+    text-decoration: none;
+    color: rgb(30, 31, 33);
+}
+
+a:link, a:visited{
+    color: rgb(109, 110, 111);
+}
+
+a:hover{
+    color: rgb(30, 31, 33);
+}
+
+.text-right{
+    text-align: right;
+}
+
+.TaskRowCompletionStatus {
+    align-items: center;
+    box-sizing: border-box;
+    display: inline-flex;
+    height: 16px;
+    justify-content: center;
+    overflow: visible;
+    width: 16px;
+}
+
+.TaskCell {
+    flex: 0 0 auto;
+    margin: 0 3px 0 0;
+}
+
+.CompoundIcon {
+    display: block;
+    stroke-width: 2px;
+}
+
+.CompoundIcon.CompoundIcon--small {
+    height: 16px;
+    min-height: 16px;
+    min-width: 16px;
+    width: 16px;
+}
+svg:not(:root) {
+    overflow: hidden;
+}
+.TaskRowCompletionStatus-taskCompletionIcon {
+    height: 12px;
+    margin: -3px;
+    padding: 4px;
+    width: 12px;
+}
+
+svg:not(:root) {
+    overflow: hidden;
+}
+
+.TaskRowCompletionStatus-checkbox .TaskRowCompletionStatus-taskCompletionIcon--incomplete .CompoundIcon-outer {
+    fill: var(--color-background-weak);
+    stroke: var(--color-icon);
+    transition: 200ms fill,200ms stroke;
+}
+
+.TaskCompletionStatusIndicator.TaskCompletionStatusIndicator--incomplete .CompoundIcon-outer {
+    fill: transparent;
+    stroke: var(--color-icon);
+    transition: 200ms fill,200ms stroke;
+}
+
+.TaskRowCompletionStatus-checkbox .TaskRowCompletionStatus-taskCompletionIcon--incomplete .CompoundIcon-outer {
+    fill: var(--color-background-weak);
+    stroke: var(--color-icon);
+    transition: 200ms fill,200ms stroke;
+}
+
+.TaskCompletionStatusIndicator.TaskCompletionStatusIndicator--incomplete .CompoundIcon-outer {
+    fill: transparent;
+    stroke: var(--color-icon);
+    transition: 200ms fill,200ms stroke;
+}
+
+:not(svg) {
+    transform-origin: 0px 0px;
+}

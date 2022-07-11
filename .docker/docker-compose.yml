@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  nginx-asanatoday:
+    container_name: nginx-asanatoday
+    image: carlonicora/asanatoday-nginx
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./nginx/Dockerfile
+      args:
+        - SERVER_NAME=${SERVER_NAME}
+        - CONTAINER_NAME=${COMPOSE_PROJECT_NAME}
+    expose:
+      - "80"
+    volumes:
+      - ../:/var/www/html:delegated
+      - ../logs:/logs/nginx:delegated
+    networks:
+      - default_network
+
+  asanatoday:
+    container_name: asanatoday
+    image: carlonicora/asanatoday:1.0
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./php-fpm/Dockerfile
+      target: ${ENVIRONMENT}
+      args:
+        - XDEBUG_HOST=${XDEBUG_HOST}
+        - XDEBUG_PORT=${XDEBUG_PORT}
+    volumes:
+      - ../:/var/www/html:delegated
+    networks:
+      - default_network
+
+networks:
+  default_network:
+    driver: bridge
+    name: ${CONTAINER_USER}

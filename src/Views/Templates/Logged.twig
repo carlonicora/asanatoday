@@ -1,0 +1,9 @@
+{% extends "/Templates/Common.twig" %}
+
+{% block main %}
+    <div class="container">
+       {{ block('content') }}
+    </div>
+    <script src="{{ links.home }}public/js/forms.js"></script>
+    {{ block('scripts') }}
+{% endblock %}
